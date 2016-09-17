@@ -1,9 +1,9 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     function testPlugin(param) {
         param = param || 'nope';
 
-        return function(style) {
+        return function (style) {
             style.define('test-plugin', param);
         };
     }
@@ -12,11 +12,11 @@ module.exports = function(grunt) {
     var lrPort = 9547;
     // 使用connect-livereload模块，生成一个与LiveReload脚本
     // <script src="http://127.0.0.1:9527/livereload.js?snipver=1" type="text/javascript"></script>
-    var lrSnippet = require('connect-livereload')({ port: lrPort });
+    var lrSnippet = require('connect-livereload')({port: lrPort});
     // 使用 middleware(中间件)，就必须关闭 LiveReload 的浏览器插件
     var serveStatic = require('serve-static');
     var serveIndex = require('serve-index');
-    var lrMiddleware = function(connect, options) {
+    var lrMiddleware = function (connect, options) {
         return [
             lrSnippet,
             // 静态文件服务器的路径 原先写法：connect.static(options.base[0])
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
         },
         watch: {
             another: {
-                files: ['css/*','src/*.styl'],
+                files: ['css/*', 'src/*.styl'],
                 tasks: ['stylus'],
                 options: {
                     livereload: 1437
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
                 // '*' 表示包含所有的文件
                 files: ['*.html', 'css/*', 'scss/*', 'js/*', 'images/**/*']
             }
-        } , // grunt.initConfig配置完毕
+        }, // grunt.initConfig配置完毕
         jshint: {
             options: {
                 curly: true,
@@ -105,30 +105,24 @@ module.exports = function(grunt) {
         stylus: {
             compile: {
                 options: {
-                    paths: ['src'],
+                    paths: ['css'],
                     relativeDest: '../css',     // 编译后输出的位置
-                                            //path to be joined and resolved with each file dest to get new one. 要加入和解决与每个文件 dest 去找新的路径。
-                                            //mostly useful for files specified using wildcards 主要用于使用通配符指定的文件
-                    urlfunc: 'data-uri', // use data-uri('test.png') in our code to trigger Data URI embedding 在我们的代码中使用 data-uri('test.png') 来触发数据 URI 嵌入
+                                                //path to be joined and resolved with each file dest to get new one. 要加入和解决与每个文件 dest 去找新的路径。
+                                                //mostly useful for files specified using wildcards 主要用于使用通配符指定的文件
+                    urlfunc: 'data-uri',        // use data-uri('test.png') in our code to trigger Data URI embedding 在我们的代码中使用 data-uri('test.png') 来触发数据 URI 嵌入
                     use: [
                         testPlugin,
-                        function() {
+                        function () {
                             return testPlugin('yep');
                         }
-                    ],
-                    import: [      //  @import 'foo', 'bar/moo', etc. into every .styl file
-                        //'foo',       //  that is compiled. These might be findable based on values you gave
-                        //'bar/moo'    //  to `paths`, or a plugin you added under `use`
                     ]
                 },
-                // files: [{
-                //     src: ['src/*.styl'],
-                //     ext: '.css'
-                // }]
                 files: {
-                    'src/style.css': 'src/style.styl', // 1:1 compile
-                    'src/stylee.css': 'src/stylee.styl'
-                    //'path/to/another.css': ['path/to/sources/*.styl', 'path/to/more/*.styl'] // compile and concat into single file 编译和连接到单个文件
+                    'css/base-all.css': 'css/base-all.styl', // 1:1 compile
+                    'css/main.css': 'css/main.styl',
+                    'css/public.css': 'css/public.styl'
+                    //'path/to/another.css': ['path/to/sources/*.styl', 'path/to/more/*.styl']
+                    // compile and concat into single file 编译和连接到单个文件
                 }
             }
         }
